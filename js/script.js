@@ -2,11 +2,13 @@
 
 
 const jobContainer = document.querySelector('.job__container');
+const filterMenu = document.querySelector('.filter__menu');
 
 const jobData = fetch('./data.json');
 
 const spawnTablets = job => {
-  const html = `<div class="tablet__test ${job.featured === true ? "featured__background" : ""}">
+  const html = `
+  <div class="tablet__test ${job.featured === true ? "featured__background" : ""}">
       <!-- Item Start -->
       <img src="${job.logo}" class="logo">
       <div class ="job__header__container">
@@ -50,7 +52,7 @@ const buttonListener = data => {
   filterButtons.forEach(button => {
       button.addEventListener('click', function() {
           console.log(button.innerHTML);
-          jobContainer.innerHTML = ''
+          jobContainer.innerHTML = '<div class="filter__menu"></div>'
           
           const filteredArrays = data.filter(jobs => jobs.role === button.innerHTML || jobs.level === button.innerHTML || jobs.languages.join(' ').includes(button.innerHTML) || jobs.tools.join(' ').includes(button.innerHTML));
           filteredArrays.forEach(filteredArray => {
@@ -59,6 +61,13 @@ const buttonListener = data => {
           });
       })
   })
+}
+
+const filterMenuCheck = () => {
+  if (filterMenu.classList.contains('hidden')) {
+    filterMenu.style.marginTop = "0em";
+    filterMenu.style.marginBottom = "0em";
+  }
 }
 
 const loadData = async () => {
@@ -71,6 +80,5 @@ const loadData = async () => {
 }
 
 loadData();
-
-
+filterMenuCheck();
 
