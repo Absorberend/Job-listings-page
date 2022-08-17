@@ -74,7 +74,7 @@ const insertJobTables = job => {
         <span class="${job.featured === true ? "featured" : ""}">${job.featured === true ? "FEATURED" : ""}</span>
       </div>
     </div>
-    <span class="position">${job.position}</span>
+    <h2 class="position">${job.position}</h2>
     <div class="job__main__info__wrapper">
       <ul>
         <li class="postedAt">${job.postedAt}</li>

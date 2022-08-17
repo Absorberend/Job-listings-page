@@ -224,6 +224,12 @@ header h1 {
     opacity: 0;
 }
 
+h2 {
+    font-size: 15px;
+    margin: 0;
+    padding: 0;
+}
+
 .divider {
     grid-area: divider;
     background-color: var(--secondary-font-color);
