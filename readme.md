@@ -11,6 +11,6 @@ In this project I had to figure out how to filter all the different categories. 
 
 ![My solution](/images/readme-picture.png "My solution")
 
-View my solution at: https://62fcf2225bc7f611c80953b8--fancy-blini-2cf689.netlify.app/
+View my solution at: https://fancy-blini-2cf689.netlify.app/
 
 Feedback is welcome! 
