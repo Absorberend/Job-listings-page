@@ -250,6 +250,26 @@ ul :first-child {
     color: var(--filter-tablets); 
 }
 
+.attribution {
+    width: 100%;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-content: flex-start;
+    color: black;
+    font-family: 'League Spartan', sans-serif;
+    font-size: 15px;
+}
+
+.attribution a {
+    margin-inline-start: 2px;
+    color: var(--main-font-color);
+}
+
+.attribution a:hover {
+    color: var(--header-font-color);
+}
+
 @media only screen and (min-width: 701px) {
     header {
         height: 150px;
