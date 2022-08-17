@@ -2,7 +2,7 @@
 
 const jobData = fetch('./data.json');
 const jobContainer = document.querySelector('.job__container');
-let filterMenuArray = new Set();
+let filterMenuArray = new Set(); 
 
 
 const filterMenuSpawner = data => {
@@ -32,7 +32,7 @@ const filterMenuSpawner = data => {
     const hardReset = () => {
       filterMenuArray.clear();
       jobContainer.innerHTML='';
-      data.forEach(job => spawnTablets(job));
+      data.forEach(job => insertJobTables(job));
       buttonListener(data);
     }
 
@@ -40,15 +40,16 @@ const filterMenuSpawner = data => {
       hardReset();
     });
   
-    //remove filter button and re-sort the job table
+    //remove filter button when clicked and re-sort the job table
     const jobButtonsFilter = document.querySelectorAll('.filter__style');
 
     jobButtonsFilter.forEach(jobButton => jobButton.addEventListener('click', function() {
 
       filterMenuArray.delete(jobButton.dataset.jobType);
       jobButton.remove();
-
+     
       if ([...filterMenuArray].length === 0) {
+         //if no filter buttons are present do a hardreset 
         hardReset();
       } else {
         const jobTable = document.querySelectorAll('.job__table');
@@ -61,7 +62,7 @@ const filterMenuSpawner = data => {
 }
 
 
-const spawnTablets = job => {
+const insertJobTables = job => {
   const html = `
   <div class="job__table ${job.featured === true ? "featured__background" : ""}">
       <!-- Item Start -->
@@ -98,6 +99,7 @@ const spawnTablets = job => {
     <!-- Item End -->
     </div>`;
 
+    //insert the jobs in the job container
   jobContainer.insertAdjacentHTML("beforeend", html);
 }
 
@@ -106,16 +108,18 @@ const filter = data => {
   let filterBase;
   let filterCheck;
 
+  //Check for each company if the clicked filter button (category) is present.
   [...filterMenuArray].forEach(filteredCategory => {
     filterBase = data.filter(company => [company.role, company.level, ...company.languages, ...company.tools].includes(filteredCategory));
   })
 
+  //Check if all the filter buttons (categories) are present before inserting the filtered jobs in the job container
   filterBase.forEach(company => {
     const categories = [company.role, company.level, ...company.languages, ...company.tools];
     filterCheck = [...filterMenuArray].filter(filterMenu => categories.includes(filterMenu));
 
     if (filterCheck.toString() === [...filterMenuArray].toString()) {
-      spawnTablets(company);
+      insertJobTables(company);
     } else {
       
     }
@@ -124,9 +128,11 @@ const filter = data => {
 
 const buttonListener = data => {
   const [...categorieButtons] = document.querySelectorAll('.info__style');
-  
+
+  //make sure that the filter buttons are always clickable whenever they are inserted into the DOM
   categorieButtons.forEach(button => {
       button.addEventListener('click', function() {
+        //filterMenuArray is Set instead of Array because we only want unique entries for the filter to work properly.
           filterMenuArray.add(button.innerHTML);
 
           jobContainer.innerHTML = ``;
@@ -141,7 +147,7 @@ const loadData = async () => {
   const response = await jobData;
   const data = await response.json();
   data.forEach(job => {
-    spawnTablets(job);
+    insertJobTables(job);
   })
   buttonListener(data);
 }
