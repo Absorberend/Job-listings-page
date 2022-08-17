@@ -66,7 +66,7 @@ const insertJobTables = job => {
   const html = `
   <div class="job__table ${job.featured === true ? "featured__background" : ""}">
       <!-- Item Start -->
-      <img src="${job.logo}" class="logo">
+      <img src="${job.logo}" class="logo" alt="${job.company}'s logo">
       <div class ="job__header__container">
       <span class="company">${job.company}</span>
       <div class="featured__wrapper">

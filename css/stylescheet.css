@@ -220,6 +220,10 @@ ul :first-child {
     list-style-type: none;
 }
 
+header h1 {
+    opacity: 0;
+}
+
 .divider {
     grid-area: divider;
     background-color: var(--secondary-font-color);
