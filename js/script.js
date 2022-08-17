@@ -1,14 +1,69 @@
 "use strict";
 
-
-const jobContainer = document.querySelector('.job__container');
-const filterMenu = document.querySelector('.filter__menu');
-
 const jobData = fetch('./data.json');
+const jobContainer = document.querySelector('.job__container');
+let filterMenuArray = new Set();
+
+
+const filterMenuSpawner = data => {
+  [...filterMenuArray].forEach(filteredCategory => {
+    const menu1 = `
+      <div class="filter__menu">
+      <div class="filter__buttons">
+        <span class="filter__style" data-job-type="${filteredCategory}">${filteredCategory}<span class="remove__filter">X</span></span>
+      </div>
+        <div class="clear__button">Clear</div>
+      </div>`;
+
+    const menu2 = `
+      <span class="filter__style" data-job-type="${filteredCategory}">${filteredCategory}<span class="remove__filter">X</span></span>`
+
+    //conditions to insert filter buttons in the filter menu
+    if (!jobContainer.firstElementChild.classList.contains('filter__menu')) {
+      jobContainer.insertAdjacentHTML("afterbegin", menu1);
+    } else {
+      const categorieButtons = document.querySelector('.filter__buttons');
+      categorieButtons.insertAdjacentHTML("beforeend", menu2);       
+    }
+
+    //Clear button in filter menu
+    const clearButton = document.querySelector('.clear__button');
+
+    const hardReset = () => {
+      filterMenuArray.clear();
+      jobContainer.innerHTML='';
+      data.forEach(job => spawnTablets(job));
+      buttonListener(data);
+    }
+
+    clearButton.addEventListener('click', function () {
+      hardReset();
+    });
+  
+    //remove filter button and re-sort the job table
+    const jobButtonsFilter = document.querySelectorAll('.filter__style');
+
+    jobButtonsFilter.forEach(jobButton => jobButton.addEventListener('click', function() {
+
+      filterMenuArray.delete(jobButton.dataset.jobType);
+      jobButton.remove();
+
+      if ([...filterMenuArray].length === 0) {
+        hardReset();
+      } else {
+        const jobTable = document.querySelectorAll('.job__table');
+        jobTable.forEach(table => table.remove());
+        filter(data); 
+        buttonListener(data);
+      }
+    }))
+  })
+}
+
 
 const spawnTablets = job => {
   const html = `
-  <div class="tablet__test ${job.featured === true ? "featured__background" : ""}">
+  <div class="job__table ${job.featured === true ? "featured__background" : ""}">
       <!-- Item Start -->
       <img src="${job.logo}" class="logo">
       <div class ="job__header__container">
@@ -43,42 +98,52 @@ const spawnTablets = job => {
     <!-- Item End -->
     </div>`;
 
-  return jobContainer.insertAdjacentHTML("beforeend", html);
+  jobContainer.insertAdjacentHTML("beforeend", html);
 }
 
-const buttonListener = data => {
-  const [...filterButtons] = document.querySelectorAll('.info__style');
 
-  filterButtons.forEach(button => {
-      button.addEventListener('click', function() {
-          console.log(button.innerHTML);
-          jobContainer.innerHTML = '<div class="filter__menu"></div>'
-          
-          const filteredArrays = data.filter(jobs => jobs.role === button.innerHTML || jobs.level === button.innerHTML || jobs.languages.join(' ').includes(button.innerHTML) || jobs.tools.join(' ').includes(button.innerHTML));
-          filteredArrays.forEach(filteredArray => {
-            spawnTablets(filteredArray);
-            buttonListener(filteredArrays);
-          });
-      })
+const filter = data => {
+  let filterBase;
+  let filterCheck;
+
+  [...filterMenuArray].forEach(filteredCategory => {
+    filterBase = data.filter(company => [company.role, company.level, ...company.languages, ...company.tools].includes(filteredCategory));
+  })
+
+  filterBase.forEach(company => {
+    const categories = [company.role, company.level, ...company.languages, ...company.tools];
+    filterCheck = [...filterMenuArray].filter(filterMenu => categories.includes(filterMenu));
+
+    if (filterCheck.toString() === [...filterMenuArray].toString()) {
+      spawnTablets(company);
+    } else {
+      
+    }
   })
 }
 
-const filterMenuCheck = () => {
-  if (filterMenu.classList.contains('hidden')) {
-    filterMenu.style.marginTop = "0em";
-    filterMenu.style.marginBottom = "0em";
-  }
+const buttonListener = data => {
+  const [...categorieButtons] = document.querySelectorAll('.info__style');
+  
+  categorieButtons.forEach(button => {
+      button.addEventListener('click', function() {
+          filterMenuArray.add(button.innerHTML);
+
+          jobContainer.innerHTML = ``;
+          filter(data);
+          buttonListener(data);
+          filterMenuSpawner(data);
+      });
+  })
 }
 
 const loadData = async () => {
-    const response = await jobData;
-    const data = await response.json();
-    data.forEach(job => {
-      spawnTablets(job);
-    })
-    buttonListener(data);
+  const response = await jobData;
+  const data = await response.json();
+  data.forEach(job => {
+    spawnTablets(job);
+  })
+  buttonListener(data);
 }
 
 loadData();
-filterMenuCheck();
-

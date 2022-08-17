@@ -41,43 +41,48 @@ main {
 
 .filter__menu {
     display: grid;
-    grid-template-columns: 4fr 1fr;
+    grid-template-columns: 4fr 0.6fr;
     grid-template-areas: 
     "fbuttons rbuttons";
     box-sizing: border-box;
     width: 320px;
-    height: 100px;
+    height: 120px;
     background-color: white;
     border-radius: 5px;
     margin: 0 auto;
     margin-block-start: -3em;
     margin-block-end: 4em;
-    padding: 1.5em;
+    padding: 0.5em 1.5em;
     box-shadow: 0px 8px 30px -15px var(--main-font-color);
 }
 
 .filter__buttons {
     grid-area: fbuttons;
     display: flex;
-    align-self: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-block-start: 1em;
+    gap: 1em;
 }
 
 .filter__style {
+    display: flex;
+    justify-content: space-between;
     background-color: var(--filter-tablets);
     box-sizing: border-box;
     color: var(--main-font-color);
     font-weight: 700;
     width: fit-content;
     height: fit-content;
-    padding: 5px 10px;
+    padding: 5px 0px 5px 10px;
     margin: -5px 0px;
     cursor: pointer;
+    gap: 5px;
 }
 
 .remove__filter {
     grid-area: rbuttons;
     display: flex;
-    justify-self: flex-end;
     height: fit-content;
     background-color: var(--main-font-color);
     border-radius: 0px 5px 5px 0px;
@@ -88,7 +93,7 @@ main {
     cursor: pointer;
 }
 
-.filter__buttons > .remove__filter:hover {
+.filter__style:hover .remove__filter {
     background-color: black;
 }
 
@@ -109,7 +114,7 @@ main {
     display: none;
 }
 
-.tablet__test {
+.job__table {
     display: grid;
     box-sizing: border-box; 
     box-shadow: 0px 8px 30px -15px var(--main-font-color);
@@ -264,12 +269,17 @@ ul :first-child {
         padding: 0em 2em 0em 2em;
     }
 
+    .filter__buttons {
+        align-items: center;
+        margin-top: 0em;
+    }
+
     .clear__button {
         justify-self: flex-end;
     }
     
 
-    .tablet__test {
+    .job__table {
         height: 125px;
         width: 100%;
         max-width: 1000px;
